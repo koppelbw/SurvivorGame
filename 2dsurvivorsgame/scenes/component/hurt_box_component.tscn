@@ -1,0 +1,5 @@
+[gd_scene format=3 uid="uid://bf3krclerhmp1"]
+
+[node name="HurtBoxComponent" type="Area2D"]
+collision_layer = 0
+collision_mask = 4

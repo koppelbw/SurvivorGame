@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bqaw5hfqcpqlp"
-path="res://.godot/imported/player.png-d340f81abf0a3162ec6e69b8e169a012.ctex"
+uid="uid://b5atbpkej36sn"
+path="res://.godot/imported/tile_0124.png-7a208b73a1855c9cd7491bcb77305c21.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://scenes/player/player.png"
-dest_files=["res://.godot/imported/player.png-d340f81abf0a3162ec6e69b8e169a012.ctex"]
+source_file="res://scenes/game_object/bacis_enemy/tile_0124.png"
+dest_files=["res://.godot/imported/tile_0124.png-7a208b73a1855c9cd7491bcb77305c21.ctex"]
 
 [params]
 

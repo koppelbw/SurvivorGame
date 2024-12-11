@@ -1,10 +1,10 @@
 using Godot;
 using System;
-using System.ComponentModel.DataAnnotations;
 
 public partial class Player : CharacterBody2D
 {
-	private const float MAX_SPEED = 200;
+	private const float MAX_SPEED = 125;
+	private const float ACCELLERATION_SMOOTHING = 25;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -16,7 +16,10 @@ public partial class Player : CharacterBody2D
 	{
 		var movementVector = GetMovementVector();
 		var direction = movementVector.Normalized();
-		Velocity = direction * MAX_SPEED;
+		var targetVelocity = direction * MAX_SPEED;
+
+		Velocity = Velocity.Lerp(targetVelocity, (float)(1 - Math.Exp(-delta * ACCELLERATION_SMOOTHING)));
+
 		MoveAndSlide();
 	}
 

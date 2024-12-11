@@ -1,0 +1,9 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://bvst0crhpra8n"]
+
+[ext_resource type="Script" path="res://resources/upgrades/AbilityUpgrade.cs" id="1_st2ar"]
+
+[resource]
+script = ExtResource("1_st2ar")
+Id = "sword_rate"
+Name = "SwordQuickness"
+Description = "Increases Sword Attack Rate by 10%"
