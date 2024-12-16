@@ -1,0 +1,8 @@
+[gd_scene load_steps=3 format=3 uid="uid://dtuf70h4f755h"]
+
+[ext_resource type="Script" path="res://scenes/ability/freeze_ability/FreezeAbilityController.cs" id="1_85w2y"]
+[ext_resource type="PackedScene" uid="uid://cp5g3aw3m0ah8" path="res://scenes/ability/freeze_ability/freeze_ability.tscn" id="2_mmjc4"]
+
+[node name="FreezeAbilityController" type="Node"]
+script = ExtResource("1_85w2y")
+FreezeAbility = ExtResource("2_mmjc4")

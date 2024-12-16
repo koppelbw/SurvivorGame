@@ -1,0 +1,74 @@
+[gd_scene load_steps=11 format=3 uid="uid://cp5g3aw3m0ah8"]
+
+[ext_resource type="Texture2D" uid="uid://dnfv1new53shx" path="res://scenes/ability/freeze_ability/Lock.png" id="1_gtea2"]
+[ext_resource type="Script" path="res://scenes/ability/freeze_ability/FreezeAbility.cs" id="1_uelnc"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cchwn"]
+atlas = ExtResource("1_gtea2")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yuw1j"]
+atlas = ExtResource("1_gtea2")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_shgqx"]
+atlas = ExtResource("1_gtea2")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7v3ul"]
+atlas = ExtResource("1_gtea2")
+region = Rect2(0, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_und73"]
+atlas = ExtResource("1_gtea2")
+region = Rect2(32, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0yqch"]
+atlas = ExtResource("1_gtea2")
+region = Rect2(64, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_esmth"]
+atlas = ExtResource("1_gtea2")
+region = Rect2(0, 64, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_5elig"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cchwn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yuw1j")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_shgqx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7v3ul")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_und73")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0yqch")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_esmth")
+}],
+"loop": false,
+"name": &"lock",
+"speed": 5.0
+}]
+
+[node name="FreezeAbility" type="Node2D"]
+position = Vector2(16, 16)
+script = ExtResource("1_uelnc")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(-3, -5)
+scale = Vector2(1, 1.01013)
+sprite_frames = SubResource("SpriteFrames_5elig")
+animation = &"lock"
+autoplay = "lock"
+frame = 6
+frame_progress = 1.0

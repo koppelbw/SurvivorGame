@@ -1,6 +1,5 @@
 using Godot;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 public partial class SwordAbilityController : Node
@@ -14,8 +13,8 @@ public partial class SwordAbilityController : Node
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready() 
 	{ 
-		var timer = GetNode<Timer>("Timer"); 
-		timer.Connect("timeout", new Callable(this, nameof(OnTimerTimeout)));
+		// var timer = GetNode<Timer>("Timer"); 
+		// timer.Connect("timeout", new Callable(this, nameof(OnTimerTimeout)));
 	}
 		 
 	private void OnTimerTimeout() 

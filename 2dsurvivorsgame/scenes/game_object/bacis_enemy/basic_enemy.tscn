@@ -1,19 +1,26 @@
-[gd_scene load_steps=9 format=3 uid="uid://8jlxpu3dpev"]
+[gd_scene load_steps=11 format=3 uid="uid://8jlxpu3dpev"]
 
 [ext_resource type="Texture2D" uid="uid://b5atbpkej36sn" path="res://scenes/game_object/bacis_enemy/tile_0124.png" id="1_opbnn"]
 [ext_resource type="Script" path="res://scenes/game_object/bacis_enemy/BasicEnemy.cs" id="1_q8i68"]
 [ext_resource type="PackedScene" uid="uid://27vdgwsnkuh1" path="res://scenes/component/health_component.tscn" id="2_sbc2o"]
 [ext_resource type="PackedScene" uid="uid://db016m03u80mk" path="res://scenes/component/vial_drop_component.tscn" id="3_a6wnl"]
 [ext_resource type="PackedScene" uid="uid://bf3krclerhmp1" path="res://scenes/component/hurt_box_component.tscn" id="4_53acm"]
+[ext_resource type="PackedScene" uid="uid://dtuf70h4f755h" path="res://scenes/ability/freeze_ability/freeze_ability_controller.tscn" id="5_v5ue0"]
 [ext_resource type="Script" path="res://scenes/component/HurtBoxComponent.cs" id="5_xhdgf"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_84odr"]
 radius = 12.0
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_h61lc"]
-radius = 5.0
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_oxux0"]
+resource_name = "basicEnemyCollisionBox"
+size = Vector2(31, 31)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_audm5"]
+size = Vector2(16, 16)
 
 [node name="BasicEnemy" type="CharacterBody2D" groups=["enemy"]]
+position = Vector2(16, 16)
+scale = Vector2(2, 2)
 collision_layer = 8
 collision_mask = 9
 motion_mode = 1
@@ -23,6 +30,8 @@ script = ExtResource("1_q8i68")
 
 [node name="VialDropComponent" parent="." node_paths=PackedStringArray("HealthComponent") instance=ExtResource("3_a6wnl")]
 HealthComponent = NodePath("../HealthComponent")
+
+[node name="FreezeAbilityController" parent="." instance=ExtResource("5_v5ue0")]
 
 [node name="HurtBoxComponent" parent="." node_paths=PackedStringArray("HealthComponent") instance=ExtResource("4_53acm")]
 script = ExtResource("5_xhdgf")
@@ -37,5 +46,11 @@ texture = ExtResource("1_opbnn")
 offset = Vector2(0, -4)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -3)
-shape = SubResource("CircleShape2D_h61lc")
+position = Vector2(0.5, -2.5)
+shape = SubResource("RectangleShape2D_oxux0")
+
+[node name="ClickableArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ClickableArea"]
+position = Vector2(0, -4)
+shape = SubResource("RectangleShape2D_audm5")
