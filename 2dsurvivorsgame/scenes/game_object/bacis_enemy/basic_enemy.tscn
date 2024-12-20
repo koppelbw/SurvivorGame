@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://8jlxpu3dpev"]
+[gd_scene load_steps=10 format=3 uid="uid://8jlxpu3dpev"]
 
 [ext_resource type="Texture2D" uid="uid://b5atbpkej36sn" path="res://scenes/game_object/bacis_enemy/tile_0124.png" id="1_opbnn"]
 [ext_resource type="Script" path="res://scenes/game_object/bacis_enemy/BasicEnemy.cs" id="1_q8i68"]
@@ -11,19 +11,10 @@
 [sub_resource type="CircleShape2D" id="CircleShape2D_84odr"]
 radius = 12.0
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_oxux0"]
-resource_name = "basicEnemyCollisionBox"
-size = Vector2(31, 31)
-
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_audm5"]
 size = Vector2(16, 16)
 
-[node name="BasicEnemy" type="CharacterBody2D" groups=["enemy"]]
-position = Vector2(16, 16)
-scale = Vector2(2, 2)
-collision_layer = 8
-collision_mask = 9
-motion_mode = 1
+[node name="BasicEnemy" type="Node2D" groups=["enemy"]]
 script = ExtResource("1_q8i68")
 
 [node name="HealthComponent" parent="." instance=ExtResource("2_sbc2o")]
@@ -38,19 +29,20 @@ script = ExtResource("5_xhdgf")
 HealthComponent = NodePath("../HealthComponent")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBoxComponent"]
-position = Vector2(0, -4)
 shape = SubResource("CircleShape2D_84odr")
+
+[node name="ClickableArea" type="Area2D" parent="."]
+collision_layer = 12
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ClickableArea"]
+shape = SubResource("RectangleShape2D_audm5")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("1_opbnn")
-offset = Vector2(0, -4)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0.5, -2.5)
-shape = SubResource("RectangleShape2D_oxux0")
-
-[node name="ClickableArea" type="Area2D" parent="."]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ClickableArea"]
-position = Vector2(0, -4)
-shape = SubResource("RectangleShape2D_audm5")
+[node name="RayCast2D" type="RayCast2D" parent="."]
+target_position = Vector2(0, 16)
+collision_mask = 111
+collide_with_areas = true
+collide_with_bodies = false

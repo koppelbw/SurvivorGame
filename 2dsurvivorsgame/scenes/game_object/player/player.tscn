@@ -1,23 +1,35 @@
-[gd_scene load_steps=6 format=3 uid="uid://ch2jysnwklwdo"]
+[gd_scene load_steps=9 format=3 uid="uid://ch2jysnwklwdo"]
 
-[ext_resource type="Texture2D" uid="uid://bqaw5hfqcpqlp" path="res://scenes/game_object/player/player.png" id="1_28kvf"]
 [ext_resource type="Script" path="res://scenes/game_object/player/Player.cs" id="1_fslbi"]
 [ext_resource type="PackedScene" uid="uid://b5leq85yla74y" path="res://scenes/ability/sword_ability_controller/sword_ability_controller.tscn" id="2_ipp8s"]
+[ext_resource type="Texture2D" uid="uid://17q454cci6xc" path="res://scenes/game_object/player/tile_0084.png" id="3_54edf"]
+[ext_resource type="PackedScene" uid="uid://0bnb2vtt50ke" path="res://scenes/ability/wall_ability/WallAbilityController.tscn" id="3_y15bd"]
+[ext_resource type="Resource" uid="uid://bfupbq2vrt8qb" path="res://resources/abilities/game_items.tres" id="4_bhmcq"]
+[ext_resource type="PackedScene" uid="uid://cn1u031k06nfv" path="res://scenes/ability/wall_ability/WallAbility.tscn" id="4_f1bqp"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qx3i0"]
+size = Vector2(16, 16)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_ap815"]
 radius = 32.0
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_h2uyi"]
-radius = 5.0
-
-[node name="Player" type="CharacterBody2D" groups=["player"]]
-collision_layer = 0
-motion_mode = 1
+[node name="Player" type="Node2D" groups=["player"]]
 script = ExtResource("1_fslbi")
 
 [node name="AbilityManager" type="Node" parent="."]
 
 [node name="SwordAbilityController" parent="AbilityManager" instance=ExtResource("2_ipp8s")]
+
+[node name="WallAbilityController" parent="AbilityManager" instance=ExtResource("3_y15bd")]
+WallAbility = ExtResource("4_f1bqp")
+GameItems = ExtResource("4_bhmcq")
+
+[node name="tempHitBox" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="tempHitBox"]
+shape = SubResource("RectangleShape2D_qx3i0")
 
 [node name="Area2D" type="Area2D" parent="."]
 position = Vector2(0, -5)
@@ -25,12 +37,14 @@ collision_layer = 16
 collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(0, 5)
 shape = SubResource("CircleShape2D_ap815")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("1_28kvf")
-offset = Vector2(0, -8)
+texture = ExtResource("3_54edf")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -5)
-shape = SubResource("CircleShape2D_h2uyi")
+[node name="RayCast2D" type="RayCast2D" parent="."]
+target_position = Vector2(0, 16)
+collision_mask = 111
+collide_with_areas = true
+collide_with_bodies = false

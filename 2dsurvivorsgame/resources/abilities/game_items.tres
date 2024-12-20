@@ -1,0 +1,7 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://bfupbq2vrt8qb"]
+
+[ext_resource type="Script" path="res://resources/abilities/GameItems.cs" id="1_g5n7x"]
+
+[resource]
+script = ExtResource("1_g5n7x")
+WallCount = {}

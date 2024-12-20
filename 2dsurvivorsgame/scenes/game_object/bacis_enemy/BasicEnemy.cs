@@ -2,40 +2,59 @@ using Godot;
 using System;
 using System.Linq;
 
-public partial class BasicEnemy : CharacterBody2D
+public partial class BasicEnemy : Node2D
 {
-	private const int moveDistance = 64;
-	private const int MaxSpeed = 40;
+	private const int moveDistance = 16;
+	public int moveSpeed = 1500;
 	private int frameCount = 0;
 	private bool isFrozen = false;
+	public float enemyMovementSpeed = 1f;
+	private bool isMoving = false;
+
 	private HealthComponent HealthComponent;
 	private Area2D ClickableArea;
 	private FreezeAbilityController FreezeAbilityController;
+	private Sprite2D sprite2D;
+	private TileMapLayer tileMapLayer;
+	private RayCast2D rayCast2D;
+
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		sprite2D = GetNode<Sprite2D>("Sprite2D");
+		tileMapLayer = GetParent().GetNode<TileMapLayer>("TileMapLayer");
+		rayCast2D = GetNode<RayCast2D>("RayCast2D");
+
 		FreezeAbilityController = GetNode<FreezeAbilityController>("FreezeAbilityController");
 		ClickableArea = GetNode<Area2D>("ClickableArea");
 		ClickableArea.InputEvent += OnMouseClick;
 	}
 
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
 		frameCount++;
-		if(frameCount % 3000 == 0)
+		if(frameCount % moveSpeed == 0)
 		{
-			if(!isFrozen)
+			if(!isMoving && !isFrozen)
 			{
-				GD.Print("Move 1 tile");
-				MoveOneTileToPlayer();
+				MoveOneTileToPlayer(delta);
 			}
-		}
+		}	
+	}
+
+	public override void _PhysicsProcess(double delta)
+	{
+		base._PhysicsProcess(delta);
+
+		if(!isMoving) return;
 		
-		// var direction = GetDirectionToPlayer();
-		// Velocity = direction * MaxSpeed;
-		// MoveAndSlide();		
+		sprite2D.GlobalPosition = sprite2D.GlobalPosition.MoveToward(GlobalPosition, enemyMovementSpeed);
+
+		if(GlobalPosition == sprite2D.GlobalPosition)
+		{
+			isMoving = false;
+		}
 	}
 
 	void OnMouseClick(Node viewport, InputEvent @event, long shapeIdx)
@@ -47,122 +66,95 @@ public partial class BasicEnemy : CharacterBody2D
 				if(FreezeAbilityController.isFrozen)
 				{
 					FreezeAbilityController.UnFreeze();
+					sprite2D.Modulate = new Color(1.0f, 1.0f, 1.0f); // undo tint
 				}
 				else
 				{
 					FreezeAbilityController.PlayFreeze();
+					sprite2D.Modulate = new Color(0.0f, 0.0f, 0.5f); // Blue tint
 				}
 				isFrozen = !isFrozen;
 			}
 		}
 	}
 
-	private Vector2 GetDirectionToPlayer()
+	private void MoveOneTileToPlayer(double delta)
 	{
-		var playerNode = GetTree().GetNodesInGroup("player").FirstOrDefault() as Node2D;
-		var direction = Vector2.Zero;
-
-		if(playerNode is not null)
-		{
-			direction = (playerNode.GlobalPosition - GlobalPosition).Normalized();
-		}
-
-		return direction;
-	}
-
-	private void MoveOneTileToPlayer()
-	{
-		var player = GetTree().GetNodesInGroup("player").FirstOrDefault() as Node2D;		
-
-		// Get the difference in positions 
+		var player = GetTree().GetNodesInGroup("player").FirstOrDefault() as Node2D;
 		Vector2 difference = player.GlobalPosition - GlobalPosition;
 
-		var motionX = new Vector2(Math.Sign(difference.X) * moveDistance, 0);
-		var motionY = new Vector2(0, Math.Sign(difference.Y) * moveDistance);
+		var motionX = new Vector2I(Math.Sign(difference.X), 0);
+		var motionY = new Vector2I(0, Math.Sign(difference.Y));
 		
 		// Determine the cardinal direction to move towards
 		if (Math.Abs(difference.X) > Math.Abs(difference.Y))
-		{			
+		{
 			if(!WillCollide(motionX))	// desired direction
 			{
-				var x = MoveAndCollide(motionX);
-				
+				MoveEnemy(motionX);
 			}
 			else
 			{
-				GD.Print("Will collide X");
 				if(!WillCollide(motionY))	// try moving in other axis
 				{
-					GD.Print("Move in Y");
-					MoveAndCollide(motionY);
+					MoveEnemy(motionY);
 				}
 				else if(!WillCollide(-motionY))
 				{
-					GD.Print("Move in -Y");
-					MoveAndCollide(-motionY);
+					MoveEnemy(-motionY);
 				}
-				else
+				else if(!WillCollide(-motionX))
 				{
-					GD.Print("Move in -X");
-					MoveAndCollide(-motionX);	// lastly try to move back way we came
+					MoveEnemy(-motionX);	// lastly try to move back way we came
 				}
+				// else do not move
 			}
-			// GlobalPosition += motion;
 		}
 		else
 		{
 			if(!WillCollide(motionY))	// desired direction
 			{
-				MoveAndCollide(motionY);
+				MoveEnemy(motionY);
 			}
 			else
 			{
-				GD.Print("Will collide Y");
 				if(!WillCollide(motionX))	// try moving in other axis
 				{
-					GD.Print("Move in X");
-					MoveAndCollide(motionX);
+					MoveEnemy(motionX);
 				}
 				else if(!WillCollide(-motionX))
 				{
-					GD.Print("Move in -X");
-					MoveAndCollide(-motionX);
+					MoveEnemy(-motionX);
 				}
-				else
+				else if(!WillCollide(-motionY))
 				{
-					GD.Print("Move in -Y");
-					MoveAndCollide(-motionY);	// lastly try to move back way we came
+					MoveEnemy(-motionY);	// lastly try to move back way we came
 				}
+				// else do not move
 			}
-			// GlobalPosition += motion;
 		}
 	}
 
-	private bool WillCollide(Vector2 offset)
-    {
-        Vector2 futurePosition = GlobalPosition + offset;
+	private void MoveEnemy(Vector2I direction)
+	{		
+		var currentTile = tileMapLayer.LocalToMap(GlobalPosition);
+		var targetTile = new Vector2I()
+		{
+			X = currentTile.X + direction.X,
+			Y = currentTile.Y + direction.Y
+		};
 
-        // Create a BoxShape2D at the future position to check for potential collisions
-        var boxShape = new RectangleShape2D
-        {
-            Size = new Vector2(32, 32) // Adjust based on your enemy's collision shape size
-        };
+		isMoving = true;
+		GlobalPosition = tileMapLayer.MapToLocal(targetTile);
+		sprite2D.GlobalPosition = tileMapLayer.MapToLocal(currentTile);
+	}
 
-        var collisionParameters = new PhysicsShapeQueryParameters2D
-        {
-            Transform = new Transform2D(0, futurePosition),
-            Shape = boxShape,
-            // CollisionMask = 4,
-			CollideWithAreas = true
-			
-        };
+	// Use RayCast to check if obj can move to target position
+	private bool WillCollide(Vector2I direction)
+	{
+		rayCast2D.TargetPosition = direction * moveDistance;
+		rayCast2D.ForceRaycastUpdate();
 
-        // Use Physics2DDirectSpaceState to check for collisions
-        var spaceState = GetWorld2D().DirectSpaceState;
-        var result = spaceState.IntersectShape(collisionParameters);
-
-        // Return true if there are any collisions detected
-		GD.Print("collision detection: " + result.Count);
-        return result.Count > 0;
-    }
+		return rayCast2D.IsColliding();		
+	}
 }

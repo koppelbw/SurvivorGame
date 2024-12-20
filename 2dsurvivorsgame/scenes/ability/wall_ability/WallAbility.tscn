@@ -1,0 +1,27 @@
+[gd_scene load_steps=5 format=3 uid="uid://cn1u031k06nfv"]
+
+[ext_resource type="Script" path="res://scenes/ability/wall_ability/WallAbility.cs" id="1_bpcp6"]
+[ext_resource type="Texture2D" uid="uid://j1g4p0auhja" path="res://scenes/ability/wall_ability/tile_0082.png" id="1_g8shv"]
+[ext_resource type="Resource" uid="uid://bfupbq2vrt8qb" path="res://resources/abilities/game_items.tres" id="2_f76f5"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qvf4r"]
+size = Vector2(16, 16)
+
+[node name="WallAbility" type="Node2D" node_paths=PackedStringArray("Timer")]
+script = ExtResource("1_bpcp6")
+Timer = NodePath("Timer")
+GameItems = ExtResource("2_f76f5")
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 64
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("RectangleShape2D_qvf4r")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_g8shv")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 5.0
+autostart = true

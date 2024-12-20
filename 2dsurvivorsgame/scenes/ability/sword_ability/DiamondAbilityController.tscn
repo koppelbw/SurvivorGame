@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3 uid="uid://cvqvyko2posb0"]
+
+[ext_resource type="Script" path="res://scenes/ability/sword_ability/DiamondAbilityController.cs" id="1_10el3"]
+[ext_resource type="PackedScene" uid="uid://hc5ly3x0dvwm" path="res://scenes/ability/diamond_ability/DiamondAbility.tscn" id="2_gfnko"]
+
+[node name="DiamondAbilityController" type="Node" node_paths=PackedStringArray("timer")]
+script = ExtResource("1_10el3")
+timer = NodePath("Timer")
+DiamondAbility = ExtResource("2_gfnko")
+
+[node name="Timer" type="Timer" parent="."]
+autostart = true

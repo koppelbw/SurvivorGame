@@ -22,6 +22,7 @@ public partial class GameCamera : Camera2D
 	private void SetTargetPosition()
 	{
 		var playerNode = GetTree().GetNodesInGroup("player").FirstOrDefault() as Node2D;
-		TargetPosition = playerNode.GlobalPosition;
+		var sprite = playerNode.GetNode<Sprite2D>("Sprite2D");
+		TargetPosition = sprite.GlobalPosition;
 	}
 }

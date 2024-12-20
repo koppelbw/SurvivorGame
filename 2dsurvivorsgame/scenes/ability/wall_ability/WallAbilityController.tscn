@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://0bnb2vtt50ke"]
+
+[ext_resource type="Script" path="res://scenes/ability/wall_ability/WallAbilityController.cs" id="1_7dwtx"]
+
+[node name="WallAbilityController" type="Node"]
+script = ExtResource("1_7dwtx")
